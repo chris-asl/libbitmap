@@ -1,3 +1,8 @@
+/*
+ * File:    Bitmap.c
+ * A basic Bitmap API
+ * Author:  Chris Aslanoglou
+ */
 #include "Bitmap.h"
 #include <stdio.h>
 #include <limits.h>
@@ -14,6 +19,11 @@ struct Bitmap_Struct {
 void bitmap_print_word(bitmap_t, unsigned int);
 
 // API Functions
+/**
+ * Allocates the necessary memory for the bitmap
+ * @param bitsNumber The number of bits to allocate
+ * @return The bitmap instance on success, otherwise NULL
+ */
 bitmap_t bitmap_allocate(unsigned int bitsNumber)
 {
     if (bitsNumber > 0) {
@@ -39,7 +49,11 @@ bitmap_t bitmap_allocate(unsigned int bitsNumber)
     }
 }
 
-
+/**
+ * Frees up all the allocated memory and
+ * invalidates the pointer
+ * @param bptr The pointer to the bitmap instance
+ */
 void bitmap_destroy(bitmap_t* bptr) 
 {
     free((*bptr)->bitmap);
@@ -51,9 +65,10 @@ void bitmap_destroy(bitmap_t* bptr)
     return;
 }
 
-/*
+/**
  * Function enabling the i-th bit into the bitmap
- * Caution: i acts as idx of an array, starts from 0
+ * @param b The bitmap object
+ * @param i The index of bit to be set to one (starting from 0)
  */
 void bitmap_setbit(bitmap_t b, unsigned int i)
 {
@@ -68,9 +83,10 @@ void bitmap_setbit(bitmap_t b, unsigned int i)
 }
 
 
-/*
+/**
  * Function for disabling the i-th bit into the bitmap
- * Caution: i acts as idx of an array, starts from 0
+ * @param b The bitmap object
+ * @param i The index of bit to be set to zero (starting from 0)
  */
 void bitmap_unsetbit(bitmap_t b, unsigned int i)
 {
@@ -82,9 +98,13 @@ void bitmap_unsetbit(bitmap_t b, unsigned int i)
     (b->bitmap)[i/CHAR_BIT] &= ~(1 << (i & (CHAR_BIT - 1)));
 }
 
-/*
- * Function returning the 1st, 2nd...bit
- * Caution: i starts from 1
+/**
+ * Function returning the 1st, 2nd, etc.. bits
+ * @param b The bitmap object
+ * @param i The index of the bit to return (Caution: i starts from 1)
+ * 
+ * @return 
+ *      The bit requested on success, otherwise 0
  */
 unsigned int bitmap_getbit(bitmap_t b, unsigned int i)
 {
@@ -96,13 +116,26 @@ unsigned int bitmap_getbit(bitmap_t b, unsigned int i)
     return (b->bitmap[i/CHAR_BIT] & (i & (CHAR_BIT - 1))) ? 1 : 0;
 }
 
-
-unsigned int bitmap_alltrue(bitmap_t b)
+/*
+ * Function responsible for checking if all bits or chechBits bits are set
+ * @param b (bitmap_t)
+ *      The bitmap
+ * @param checkBits (unsigned int)
+ *      The number of bits to check, if this is equal to 0, then all the bits
+ *      will be checked
+ * @return 
+ *      True (1) or False (0) will be returned
+ */
+unsigned int bitmap_alltrue(bitmap_t b, unsigned int checkBits)
 {
     unsigned int i, count = 0, bytes_num = 0, bits_num = 0;
     // find the max number that can be represented 
     // with (bits_requested / CHAR_BITS)
-    unsigned int max_num_bits = (2 << ((b->bitsNum & (CHAR_BIT - 1)) - 1)) - 1;
+    unsigned int max_num_bits = 0;
+    if (checkBits == 0)
+        max_num_bits = (2 << ((b->bitsNum & (CHAR_BIT - 1)) - 1)) - 1;
+    else
+        max_num_bits = (2 << ((checkBits & (CHAR_BIT - 1)) - 1)) - 1;
     // find the max number that can be represented from a byte (char)
     unsigned int max_num_bytes = (2 << (CHAR_BIT - 1)) - 1;
     for (i = 0; i < b->sizeBytes; i++) {
@@ -121,6 +154,11 @@ unsigned int bitmap_alltrue(bitmap_t b)
 }
 
 
+/**
+ * Prints the bitmap in binary form 
+ * (1st, 2nd, etc.. bits are from left to right)
+ * @param b The bitmap to be printed
+ */
 void bitmap_print(bitmap_t b)
 {
     unsigned int i;
@@ -129,6 +167,10 @@ void bitmap_print(bitmap_t b)
     }
 }
 
+/*
+ * Used for printing the bitmap 
+ * API private method
+ */
 void bitmap_print_word(bitmap_t b, unsigned int word)
 {
     char str[9] = {0};

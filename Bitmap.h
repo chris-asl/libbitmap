@@ -1,8 +1,7 @@
 /*
- * File:   Bitmap.h
- * Author: chris
- *
- * Created on February 14, 2014, 3:13 PM
+ * File:    Bitmap.h
+ * A basic Bitmap API (header)
+ * Author:  Chris Aslanoglou
  */
 
 #ifndef BITMAP_H
@@ -19,8 +18,8 @@ extern "C" {
     void bitmap_setbit(bitmap_t, unsigned int);
     void bitmap_unsetbit(bitmap_t, unsigned int);
     unsigned int bitmap_getbit(bitmap_t, unsigned int);
-    unsigned int bitmap_alltrue(bitmap_t);
-    void bitmap_print_word(bitmap_t, unsigned int);
+    unsigned int bitmap_alltrue(bitmap_t, unsigned int);
+    void bitmap_print(bitmap_t);
 
 
 
