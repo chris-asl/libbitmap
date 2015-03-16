@@ -1,5 +1,5 @@
 .dep.inc
-Makefile
+Makefile.netbeans
 bit
 build/
 dist/
