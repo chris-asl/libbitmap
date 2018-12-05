@@ -1,7 +1,7 @@
-Bitmap API 
+LibBitMap 
 ==========
 
-A basic bitmap API in C    
+A basic bitmap library in C.  
 
 The Bitmap is represented in a `bitmap_t`, that is a pointer to a Bitmap_Struct.  
 I've included a demo client file *demo.c*, for a quick-start.
